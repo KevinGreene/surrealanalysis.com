@@ -31,7 +31,7 @@
 
 &lt;p&gt;This splits the message based on whitespace and calls the first element in the message with the rest of the elements in the message as arguments. For example, if the user typed &lt;code&gt;/redis set this 1&lt;/code&gt; then the second line of code is functionally &lt;code&gt;result = redis.set(&amp;quot;this&amp;quot;, 1)&lt;/code&gt;.&lt;/p&gt;
 
-&lt;p&gt;It&amp;rsquo;s far from the prettiest code I&amp;rsquo;ve ever written. It&amp;rsquo;s untested, imperative, and doesn&amp;rsquo;t have much to it. But it works. It went from conception to implementation to deployed in less than a day. And it serves a useful purpose, which is about as much I can ask from any side project.&lt;/p&gt;
+&lt;p&gt;It&amp;rsquo;s far from the prettiest code I&amp;rsquo;ve ever written. It&amp;rsquo;s untested, imperative, and doesn&amp;rsquo;t have much to it. But it works. It went from conception to implementation to deployed in less than a day. And it serves a useful purpose, which is about as much as I can ask from any side project.&lt;/p&gt;
 </description>
     </item>
     
