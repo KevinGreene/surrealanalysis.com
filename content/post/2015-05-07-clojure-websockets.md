@@ -38,7 +38,7 @@ The actual definition of the server is very easy to setup:
 
 After this, all logic lives in the `process-message` function.
 
-For initial messages, we need to create a map of ids to channels we need to broadcast on.
+For initial messages, we need to create a map of IDs to channels we need to broadcast on.
 
 Because following is bidirectional in nature, we add the channel we just created to the list of channels listening to that ID.
 
@@ -90,7 +90,7 @@ This is by no means the professional, final solution. It:
 
  Feel free to test the above application with the following code,
  which utilizes [gniazdo](https://github.com/stylefruits/gniazdo), a Clojure websocket client
- to generate and test several user-ids with several longitude / latitude combinations.
+ to generate and test several user IDs with longitude / latitude combinations.
  
 ```clojure
 
