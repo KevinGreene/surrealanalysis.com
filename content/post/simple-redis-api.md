@@ -22,4 +22,4 @@ The code is a fairly straightforward wrapper around the Redis API, but I like on
 
 This splits the message based on whitespace and calls the first element in the message with the rest of the elements in the message as arguments. For example, if the user typed `/redis set this 1` then the second line of code is functionally `result = redis.set("this", 1)`.
 
-It's far from the prettiest code I've ever written. It's untested, imperative, and doesn't have much to it. But it works. It went from conception to implementation to deployed in less than a day. And it serves a useful purpose, which is about as much I can ask from any side project.
+It's far from the prettiest code I've ever written. It's untested, imperative, and doesn't have much to it. But it works. It went from conception to implementation to deployed in less than a day. And it serves a useful purpose, which is about as much as I can ask from any side project.
