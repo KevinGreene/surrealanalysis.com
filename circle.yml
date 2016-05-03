@@ -1,4 +1,6 @@
 machine:
+  python:
+    version: 2.7.6
   environment:
     CIRCLE_BUILD_DIR: $HOME/$CIRCLE_PROJECT_REPONAME
     PATH: $PATH:$CIRCLE_BUILD_DIR/bin
