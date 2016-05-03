@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  
+  <url>
+    <loc>http://surrealanalysis.com/</loc>
+    <lastmod>2016-04-22T01:03:14-04:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>http://surrealanalysis.com/post/simple-redis-api/</loc>
+    <lastmod>2016-04-22T01:03:14-04:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://surrealanalysis.com/post/2015-05-07-clojure-websockets/</loc>
+    <lastmod>2015-05-07T01:18:26-04:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://surrealanalysis.com/post/2015-03-05-games/</loc>
+    <lastmod>2015-03-06T01:15:44-04:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://surrealanalysis.com/post/2015-02-05-partition-by-clojure/</loc>
+    <lastmod>2015-02-05T01:14:12-04:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://surrealanalysis.com/post/monit-redis/</loc>
+    <lastmod>2014-03-20T01:11:51-04:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://surrealanalysis.com/aboud/</loc>
+  </url>
+  
+  <url>
+    <loc>http://surrealanalysis.com/about/</loc>
+  </url>
+  
+</urlset>

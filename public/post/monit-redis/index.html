@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>Monit: The Quick Fix</title>
+
+  <meta name="author" content="Kevin Greene" />
+  
+  
+
+  <meta name="generator" content="Hugo 0.15" />
+
+  <link rel="alternate" href="http://surrealanalysis.com/index.xml" type="application/rss+xml" title="Surreal Analysis">
+
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" />
+  <link rel="stylesheet" href="http://surrealanalysis.comcss/bootstrap.min.css" />
+  <link rel="stylesheet" href="http://surrealanalysis.comcss/main.css" />
+  <link rel="stylesheet" href="http://surrealanalysis.comcss/custom.css" />
+  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
+  <link rel="stylesheet" href="http://surrealanalysis.comcss/pygment_highlights.css" />
+  
+  
+  <meta property="og:title" content="Monit: The Quick Fix" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="/" />
+  <meta property="og:image" content="/img/infinity.png" />
+  
+</head>
+
+
+  <body>
+    <div id="wrapper">
+      <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="http://surrealanalysis.com">Home</a>
+      <a class="navbar-brand" href="http://surrealanalysis.com/about">About</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+      
+      </ul>
+    </div>
+
+	<div class="avatar-container">
+	  <div class="avatar-img-border">
+      
+          <a title="Surreal Analysis" href="http://surrealanalysis.com">
+              <img class="avatar-img" src="http://surrealanalysis.com/img/infinity.png" alt="Surreal Analysis" />
+          </a>
+      
+	  </div>
+	</div>
+
+  </div>
+</nav>
+
+
+      <div role="main" class="container main-content">
+
+        
+        
+
+
+
+
+
+<header class="header-section ">
+
+<div class="intro-header no-img">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="post-heading">
+          <h1>Monit: The Quick Fix</h1>
+      
+      
+      
+      <span class="post-meta">Posted on March 20, 2014</span>
+      
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</header>
+
+
+
+
+
+<div class="container">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+          
+
+<p>Ideally, in a production system, everything works perfectly. Services never mysteriously crash, free memory is constantly available, and CPU load rarely spikes above 50%. Unfortunately, this is not always the case.</p>
+
+<p>Recently, a client was having issues with their site going down, consistently. They knew it was due to the redis service stopping, but didn&rsquo;t know how to fix it. As a result, one person was perpetually on call, waiting for the site to go down, to run a simple <code>sudo service redis restart</code>.</p>
+
+<p>While it won&rsquo;t fix all of your problems, monit will buy you time, and your sysadmins sleep.</p>
+
+<h3 id="installing-monit:912dc33cccf97a38e9003e09818e56f5">Installing Monit</h3>
+
+<p>On CentOS</p>
+
+<pre><code class="language-bash"># First, install the EPEL repository
+
+wget http://dl.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm
+wget http://rpms.famillecollet.com/enterprise/remi-release-6.rpm
+sudo rpm -Uvh remi-release-6*.rpm epel-release-6*.rpm
+
+sudo yum install monit
+</code></pre>
+
+<p>On Ubuntu</p>
+
+<pre><code class="language-bash">sudo apt-get install monit
+</code></pre>
+
+<p>This process creates a configuration file, and adds the command <code>monit</code> to the path.</p>
+
+<h3 id="configuring-monit:912dc33cccf97a38e9003e09818e56f5">Configuring Monit</h3>
+
+<p>Monit config files are located in different places depending on the system. Ubuntu&rsquo;s config file is located at <code>/etc/monit/monitrc</code>, whereas CentOS uses <code>/etc/monitrc</code>.</p>
+
+<p>Monit config files follow a simple structure, of the form</p>
+
+<pre><code class="language-bash">check process $processName with pidfile $pidfilePath
+  start program = $commandToStart
+  stop  program = $commandToStop
+  if failed host localhost port $portNumber then restart
+  $timeoutConditions
+</code></pre>
+
+<p>As an example, below is how we have configured monit to watch redis on a CentOS box that was having memory issues, causing redis to force quit.</p>
+
+<pre><code class="language-bash">check process redis-server with pidfile /var/run/redis/redis.pid
+  start program = &quot;/etc/init.d/redis start&quot;
+  stop  program = &quot;/etc/init.d/redis stop&quot;
+  if failed host localhost port 6379 then restart
+  if 5 restarts within 5 cycles then timeout
+</code></pre>
+
+<p>In general, monit is a good tool to have in place. Though hopefully it is rarely needed, it prevents issues where someone is called at 3am in order to run a simple command, due to a service crash.</p>
+
+<p>Originally Posted at <a href="http://spantree.net/blog/2014/03/20/monit.html">http://spantree.net/blog/2014/03/20/monit.html</a></p>
+
+      </article>
+
+      <ul class="pager blog-pager">
+        
+        
+        <li class="next">
+          <a href="http://surrealanalysis.com/post/2015-02-05-partition-by-clojure/" data-toggle="tooltip" data-placement="top" title="Partition By in Clojure">Next Post &rarr;</a>
+        </li>
+        
+      </ul>
+
+      
+
+    </div>
+  </div>
+</div>
+
+        
+
+      </div>
+
+      <footer>
+  <div class="container beautiful-jekyll-footer">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+          
+          <li>
+            <a href="https://github.com/KevinGreene" title="GitHub">
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+		      
+          <li>
+            <a href="https://twitter.com/SurrealAnalysis" title="Twitter">
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+		      
+          <li>
+            <a href="mailto:kevindgreene@gmail.com" title="Email me">
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+		      
+          <li>
+            <a href="https://linkedin.com/in/kevindgreene" title="LinkedIn">
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+	    	  
+          
+          
+
+    		  <li>
+      			<a href="http://surrealanalysis.comindex.xml" title="RSS">
+      			  <span class="fa-stack fa-lg">
+        				<i class="fa fa-circle fa-stack-2x"></i>
+        				<i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+      			  </span>
+      			</a>
+    		  </li>		
+
+        </ul>
+        <p class="copyright text-muted">
+    		  Kevin Greene
+    		  &nbsp;&bull;&nbsp;
+    		  2016
+    		  
+    		  
+    		  &nbsp;&bull;&nbsp;
+    		  <a href="http://surrealanalysis.com">Surreal Analysis</a>
+    		  
+  	    </p>
+  	        
+    		<p class="theme-by text-muted">
+    		  Theme by
+    		  <a href="http://deanattali.com/beautiful-jekyll/">beautiful-jekyll</a>
+    		</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="http://surrealanalysis.comjs/jquery-1.11.2.min.js"></script>
+<script src="http://surrealanalysis.comjs/bootstrap.min.js"></script>
+<script src="http://surrealanalysis.comjs/main.js"></script>
+
+
+
+    </div>
+  </body>
+</html>
+

@@ -1,0 +1,14 @@
+baseurl = "http://surrealanalysis.com"
+languageCode = "en-us"
+title = "Surreal Analysis"
+
+[Params]
+  logo = "/img/infinity.png"
+
+
+[Author]
+  name = "Kevin Greene"
+  email = "kevindgreene@gmail.com"
+  github = "KevinGreene"
+  twitter = "SurrealAnalysis"
+  linkedin = "in/kevindgreene"

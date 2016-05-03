@@ -1,0 +1,332 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Posts on Surreal Analysis</title>
+    <link>http://surrealanalysis.com/post/</link>
+    <description>Recent content in Posts on Surreal Analysis</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <managingEditor>kevindgreene@gmail.com (Kevin Greene)</managingEditor>
+    <webMaster>kevindgreene@gmail.com (Kevin Greene)</webMaster>
+    <lastBuildDate>Fri, 22 Apr 2016 01:03:14 -0400</lastBuildDate>
+    <atom:link href="http://surrealanalysis.com/post/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>A Simple Redis Slack Bot</title>
+      <link>http://surrealanalysis.com/post/simple-redis-api/</link>
+      <pubDate>Fri, 22 Apr 2016 01:03:14 -0400</pubDate>
+      <author>kevindgreene@gmail.com (Kevin Greene)</author>
+      <guid>http://surrealanalysis.com/post/simple-redis-api/</guid>
+      <description>&lt;p&gt;Though I&amp;rsquo;m many years late to the game, I just started playing with Ruby, and I&amp;rsquo;ve been enjoying it quite a bit. After creating an API with Sinatra for an internal testing tool at Spantree, I was ready to try it out on a side project.&lt;/p&gt;
+
+&lt;p&gt;Because I&amp;rsquo;m a remote employee, I depend heavily on Slack. Slack keeps me connected to the community at my company, the cities I&amp;rsquo;m in, and the technologies I use. As a result, a lot of my side projects end up being enhancements to Slack. While using Slack, I often want to keep track of a simple number, or a simple value. When I want to do this in an application, my default is Redis, so why not use that while Slacking?&lt;/p&gt;
+
+&lt;p&gt;Enter &lt;a href=&#34;https://github.com/KevinGreene/redis-api&#34;&gt;a simple Redis Slackbot&lt;/a&gt;, a project I threw together one evening. Just 36 lines of code, and we have a functioning Slackbot.&lt;/p&gt;
+
+&lt;p&gt;The code is a fairly straightforward wrapper around the Redis API, but I like one bit of code more than the others:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-ruby&#34;&gt;  message = params[&amp;quot;text&amp;quot;].split
+  result = redis.send(*message)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This splits the message based on whitespace and calls the first element in the message with the rest of the elements in the message as arguments. For example, if the user typed &lt;code&gt;/redis set this 1&lt;/code&gt; then the second line of code is functionally &lt;code&gt;result = redis.set(&amp;quot;this&amp;quot;, 1)&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;It&amp;rsquo;s far from the prettiest code I&amp;rsquo;ve ever written. It&amp;rsquo;s untested, imperative, and doesn&amp;rsquo;t have much to it. But it works. It went from conception to implementation to deployed in less than a day. And it serves a useful purpose, which is about as much I can ask from any side project.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Clojure Websockets with http-kit</title>
+      <link>http://surrealanalysis.com/post/2015-05-07-clojure-websockets/</link>
+      <pubDate>Thu, 07 May 2015 01:18:26 -0400</pubDate>
+      <author>kevindgreene@gmail.com (Kevin Greene)</author>
+      <guid>http://surrealanalysis.com/post/2015-05-07-clojure-websockets/</guid>
+      <description>&lt;p&gt;As I continue to evaluate Clojure, new opportunities present themselves. In the
+past, I&amp;rsquo;ve done highly concurrent processing with Node.js
+or a JVM solution on top of Jetty. While these work, I never found them
+particularly enjoyable to use.&lt;/p&gt;
+
+&lt;p&gt;Enter Clojure.&lt;/p&gt;
+
+&lt;p&gt;Recently I worked with some colleagues on an app designed around spectating runners.
+To quickly create an MVP, we needed a server that would broadcast coordinates periodically to all users who cared.
+Websockets seemed like the way to go,
+and because various members on the team had mixed experiences with &lt;a href=&#34;http://socket.io/&#34;&gt;socket.io&lt;/a&gt;,
+we went with &lt;a href=&#34;http://www.http-kit.org/&#34;&gt;http-kit&lt;/a&gt;, the Clojure solution for websockets.&lt;/p&gt;
+
+&lt;p&gt;The actual definition of the server is very easy to setup:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-clojure&#34;&gt;(defonce server (atom nil))
+
+(defn app [request]
+  (with-channel request channel
+    (on-close channel process-close)
+    (on-receive channel (fn [data]
+                          (process-message channel data)))))
+
+(defn -main []
+  (reset! server (run-server #&#39;app {:port 8080})))
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;After this, all logic lives in the &lt;code&gt;process-message&lt;/code&gt; function.&lt;/p&gt;
+
+&lt;p&gt;For initial messages, we need to create a map of ids to channels we need to broadcast on.&lt;/p&gt;
+
+&lt;p&gt;Because following is bidirectional in nature, we add the channel we just created to the list of channels listening to that ID.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-clojure&#34;&gt;(def channel-map (atom {}))
+
+(defn process-message [channel message]
+  (let [json-data (json/read-str message :key-fn keyword)]
+    (if (:initialRequest json-data)
+      (process-initial-message json-data channel)
+      (process-geo-message json-data))))
+
+(defn process-initial-message [json-data channel]
+  (doseq [follow-id-string (:following json-data)]
+    (let [follow-id (keyword (str follow-id-string))]
+      (if (follow-id @channel-map)
+        (swap! channel-map assoc follow-id
+               (conj (get-in @channel-map [follow-id]) channel))
+        (swap! channel-map assoc follow-id [channel])))))
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Each time we receive a message after the initial request,
+we simply broadcast whatever we receive to the channels registered as listening to the specific ID.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-clojure&#34;&gt;(defn process-geo-message [json-data]
+  (let [user-id (:userId json-data)
+        channels ((keyword (str user-id)) @channel-map)]
+    (doseq [channel channels]
+      (send! channel
+        (json/write-str
+          {:userId user-id
+           :lat (:lat json-data)
+           :lng (:lng json-data)}))))))
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Combine all of the previous code snippets, and the result is
+the MVP for a server that facilitates realtime bidirectional communication between several clients over websockets.&lt;/p&gt;
+
+&lt;p&gt;This is by no means the professional, final solution. It:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Has no authentication&lt;/li&gt;
+&lt;li&gt;Relies purely on user input to maintain the ID&lt;/li&gt;
+&lt;li&gt;Doesn&amp;rsquo;t clean up when users disconnect&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;That said, this is still a working solution to our problem, and let us get where we needed to be in as much time as it has taken me to type up this blog post.
+ In addition to demonstrating Clojure is a viable solution for websockets,
+ it also demonstrated that Clojure is a viable solution for quickly prototyping an application.&lt;/p&gt;
+
+&lt;p&gt;Feel free to test the above application with the following code,
+ which utilizes &lt;a href=&#34;https://github.com/stylefruits/gniazdo&#34;&gt;gniazdo&lt;/a&gt;, a Clojure websocket client
+ to generate and test several user-ids with several longitude / latitude combinations.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-clojure&#34;&gt;
+ (ns spectate-server.client
+  (:require [clojure.tools.logging :as log])
+  (:require [clojure.data.json :as json])
+  (require [gniazdo.core :as ws]))
+
+(def url &amp;quot;ws://localhost:8080&amp;quot;)
+
+(def id-channel-map (atom {}))
+
+(def number-of-users 100)
+
+;; Converts a keyword to an integer
+(defn parse-keyword-int [k]
+  (Integer. (re-find  #&amp;quot;\d+&amp;quot; (str k)))
+
+(defn on-receive [user-id msg]
+  (log/info &amp;quot;User &amp;quot; user-id &amp;quot;Received &amp;quot; msg))
+
+(defn createSocket [user-id]
+  (ws/connect url
+              :on-receive (partial on-receive user-id)))
+
+(defn create-initial-msg [user-id following-ids]
+  (json/write-str {
+                   :initialRequest true
+                   :following following-ids
+                   :userId user-id}))
+
+(defn create-geo-msg [user-id lat lng]
+  (json/write-str {:userId user-id
+                   :lat lat
+                   :lng lng}))
+
+(defn -main []
+  (dotimes [user-id number-of-users]
+    (swap! id-channel-map assoc (keyword (str user-id))
+           (createSocket user-id)))
+
+  (doseq [[user-id-key socket] @id-channel-map]
+    (let [user-id (parse-keyword-int user-id-key)]
+      (ws/send-msg socket (create-initial-msg user-id [user-id (inc user-id)]))))
+
+  (dotimes [x 1000]
+    (let [user-id (rand-int number-of-users) user-id-key (keyword (str user-id))
+          socket (user-id-key @id-channel-map)]
+      (ws/send-msg socket (create-geo-msg user-id (rand 100) (rand 100)))
+      )))
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Games, Expectations, and Anticipating Users</title>
+      <link>http://surrealanalysis.com/post/2015-03-05-games/</link>
+      <pubDate>Fri, 06 Mar 2015 01:15:44 -0400</pubDate>
+      <author>kevindgreene@gmail.com (Kevin Greene)</author>
+      <guid>http://surrealanalysis.com/post/2015-03-05-games/</guid>
+      <description>
+
+&lt;p&gt;I love games, and I love game theory. Recently Spantree started doing lightning talks, which gave me the chance to share some of my favorite group &amp;ldquo;games&amp;rdquo;, and hopefully provide some insight on clients.&lt;/p&gt;
+
+&lt;h3 id=&#34;two-thirds-game:7d7773ffeb986585cc8edac65afb682f&#34;&gt;Two Thirds Game&lt;/h3&gt;
+
+&lt;p&gt;In this game, each person submits an integer between 0 and 100. The winner is the person who picked a number closer to two thirds of the average of all submitted numbers.&lt;/p&gt;
+
+&lt;p&gt;Strategically, you can reason that no one will guess above 66, as that is &lt;sup&gt;2&lt;/sup&gt;&amp;frasl;&lt;sub&gt;3&lt;/sub&gt; of 100, the maximum possible guess.&lt;/p&gt;
+
+&lt;p&gt;But, if no one guesses above 66, you should not guess above 44. This continues on until the only logical guess is 1. A simple strategy and a simple conclusion.&lt;/p&gt;
+
+&lt;h3 id=&#34;the-pirate-game:7d7773ffeb986585cc8edac65afb682f&#34;&gt;The Pirate Game&lt;/h3&gt;
+
+&lt;p&gt;The pirate game is a little more complex. In this game, everyone represents pirates, that can be strictly ordered in terms of seniority.&lt;/p&gt;
+
+&lt;p&gt;After finding 100 gold coins, the pirates must divide up the gold. The most senior pirate proposes a plan. If at least half the pirates, including the most senior, approve the plan then it is followed. Otherwise, that pirate is thrown overboard, and it moves on to the next pirate.&lt;/p&gt;
+
+&lt;p&gt;Working backwards, we can see that the most senior pirate makes out incredibly well. If it gets down to the last two pirates, the most senior of them will simply give themselves all the money, and the other pirate none. In our case, there were 7 participants, so we can call the pirates A - G, with A being the most senior.&lt;/p&gt;
+
+&lt;p&gt;Pirate G will do anything to prevent it from passing to Pirate F, so Pirate E can simply give Pirate G a single gold to secure their vote, taking the 99 other pieces for themselves. From here, Pirate F will take anything to make sure it doesn&amp;rsquo;t pass to Pirate E, so Pirate D needs only offer them a single gold. Working upwards, we see the logical, ideal solution is Pirate A with 97, Pirate C with 1, Pirate E with 1, and Pirate G with 1.&lt;/p&gt;
+
+&lt;h3 id=&#34;people-aren-t-rational:7d7773ffeb986585cc8edac65afb682f&#34;&gt;People Aren&amp;rsquo;t Rational&lt;/h3&gt;
+
+&lt;p&gt;When we actually followed through, the results were far different from what we expected.&lt;/p&gt;
+
+&lt;p&gt;In the first example, the average ended up being 22. Some people followed the process of multiplying the maximum by &lt;sup&gt;2&lt;/sup&gt;&amp;frasl;&lt;sub&gt;3&lt;/sub&gt; only twice, and guessed 44. Others followed that pattern many times, and got closer to 5 or 6. But, only the people who anticipated both actually succeeded.&lt;/p&gt;
+
+&lt;p&gt;In the pirate game, Jonathan, acting as senior pirate, initially suggested 50% for himself, which was quickly met with cries of dismay. He quickly lowered his share to 35%, and was able to reach a narrow agreement doling out the rest more or less equally.&lt;/p&gt;
+
+&lt;p&gt;It doesn&amp;rsquo;t matter that mathematically, the &lt;sup&gt;2&lt;/sup&gt;&amp;frasl;&lt;sub&gt;3&lt;/sub&gt; game should always be 1. It doesn&amp;rsquo;t matter that logically, Jonathan should have been able to keep 97 coins. Because in the end, you would have lost either game if you went the pure logic route. Instead, you need to anticipate others wants and emotions. Even after explaining the pirate game, few people would accept only 1 coin, as they still felt cheated.&lt;/p&gt;
+
+&lt;p&gt;Similarly, in order to successfully develop software you need to take into account the emotional and human aspects. It is not just the experience that is technically correct, and software is far more than a collection of features. Though the perfect combination of human appeal and technical excellence is rare, it is worth striving for.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Partition By in Clojure</title>
+      <link>http://surrealanalysis.com/post/2015-02-05-partition-by-clojure/</link>
+      <pubDate>Thu, 05 Feb 2015 01:14:12 -0400</pubDate>
+      <author>kevindgreene@gmail.com (Kevin Greene)</author>
+      <guid>http://surrealanalysis.com/post/2015-02-05-partition-by-clojure/</guid>
+      <description>&lt;p&gt;On every professional software engineering job I&amp;rsquo;ve had, data transformation always played a role. Most recently, at Spantree we needed to get a massive corpus of synonyms into the file format readable by &lt;a href=&#34;http://www.elasticsearch.org/&#34;&gt;Elasticsearch&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;We received a 640MB text file, with over 5.4 million lines of the form&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;C0000005|...|Dog|...
+C0000005|...|Canine|...
+C0000039|...|Cat|...
+C0000039|...|Feline|...
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;While a Groovy or Python solution was possible, this was definitely a problem that would require processing things line by line.&lt;/p&gt;
+
+&lt;p&gt;Instead of relying on keeping track of state line by line, this seemed like a great opportunity to try out &lt;a href=&#34;http://clojure.org&#34;&gt;Clojure&lt;/a&gt;. The crux of the application boils down to two functions&lt;/p&gt;
+
+&lt;p&gt;First, the processLine function. This takes in a given string, and returns a map with the given ID and word.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-clojure&#34;&gt;(defn processLine
+  [line]
+  (let [splitLine (str/split line #&amp;quot;\|&amp;quot;)]
+    {:id (nth splitLine 0)
+     :word (nth splitLine 3)}))
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;While the syntax is different, this is fairly similar to what would have been used in Groovy or Python.&lt;/p&gt;
+
+&lt;p&gt;After we read in a line, we need to group the lines based on their ID. This is when Clojure began to really show improvement in brevity and style. The function &lt;code&gt;partition-by&lt;/code&gt; allows us to create sequences of groups based on the result of a given function. In this case, the given function is simply getting the ID of a line.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-clojure&#34;&gt;(defn groupSynonymsById
+  [allSynonyms]
+  (partition-by #(:id %) allSynonyms))
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;With some basic wrappers like &lt;code&gt;importAllSynonyms&lt;/code&gt; to load the file and map &lt;code&gt;processLine&lt;/code&gt;, and &lt;code&gt;writeOutGroupedSynonyms&lt;/code&gt; to create the formatting we want, the entire main method becomes&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-clojure&#34;&gt;
+(writeOutGroupedSynonyms (groupSynonymsById (importAllSynonyms)))
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Nothing done was exclusive to Clojure, but the combination of built in functions and succinct syntax allowed us to produce a script with less than 15 lines of actual code. This will allow us to come back and understand the code with little effort, making any changes quick and painless.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Monit: The Quick Fix</title>
+      <link>http://surrealanalysis.com/post/monit-redis/</link>
+      <pubDate>Thu, 20 Mar 2014 01:11:51 -0400</pubDate>
+      <author>kevindgreene@gmail.com (Kevin Greene)</author>
+      <guid>http://surrealanalysis.com/post/monit-redis/</guid>
+      <description>
+
+&lt;p&gt;Ideally, in a production system, everything works perfectly. Services never mysteriously crash, free memory is constantly available, and CPU load rarely spikes above 50%. Unfortunately, this is not always the case.&lt;/p&gt;
+
+&lt;p&gt;Recently, a client was having issues with their site going down, consistently. They knew it was due to the redis service stopping, but didn&amp;rsquo;t know how to fix it. As a result, one person was perpetually on call, waiting for the site to go down, to run a simple &lt;code&gt;sudo service redis restart&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;While it won&amp;rsquo;t fix all of your problems, monit will buy you time, and your sysadmins sleep.&lt;/p&gt;
+
+&lt;h3 id=&#34;installing-monit:912dc33cccf97a38e9003e09818e56f5&#34;&gt;Installing Monit&lt;/h3&gt;
+
+&lt;p&gt;On CentOS&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;# First, install the EPEL repository
+
+wget http://dl.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm
+wget http://rpms.famillecollet.com/enterprise/remi-release-6.rpm
+sudo rpm -Uvh remi-release-6*.rpm epel-release-6*.rpm
+
+sudo yum install monit
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;On Ubuntu&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;sudo apt-get install monit
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This process creates a configuration file, and adds the command &lt;code&gt;monit&lt;/code&gt; to the path.&lt;/p&gt;
+
+&lt;h3 id=&#34;configuring-monit:912dc33cccf97a38e9003e09818e56f5&#34;&gt;Configuring Monit&lt;/h3&gt;
+
+&lt;p&gt;Monit config files are located in different places depending on the system. Ubuntu&amp;rsquo;s config file is located at &lt;code&gt;/etc/monit/monitrc&lt;/code&gt;, whereas CentOS uses &lt;code&gt;/etc/monitrc&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Monit config files follow a simple structure, of the form&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;check process $processName with pidfile $pidfilePath
+  start program = $commandToStart
+  stop  program = $commandToStop
+  if failed host localhost port $portNumber then restart
+  $timeoutConditions
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;As an example, below is how we have configured monit to watch redis on a CentOS box that was having memory issues, causing redis to force quit.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;check process redis-server with pidfile /var/run/redis/redis.pid
+  start program = &amp;quot;/etc/init.d/redis start&amp;quot;
+  stop  program = &amp;quot;/etc/init.d/redis stop&amp;quot;
+  if failed host localhost port 6379 then restart
+  if 5 restarts within 5 cycles then timeout
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;In general, monit is a good tool to have in place. Though hopefully it is rarely needed, it prevents issues where someone is called at 3am in order to run a simple command, due to a service crash.&lt;/p&gt;
+
+&lt;p&gt;Originally Posted at &lt;a href=&#34;http://spantree.net/blog/2014/03/20/monit.html&#34;&gt;http://spantree.net/blog/2014/03/20/monit.html&lt;/a&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>
