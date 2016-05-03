@@ -17,18 +17,18 @@
   <link rel="alternate" href="http://www.surrealanalysis.com/index.xml" type="application/rss+xml" title="Surreal Analysis">
 
   <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" />
-  <link rel="stylesheet" href="http://www.surrealanalysis.comcss/bootstrap.min.css" />
-  <link rel="stylesheet" href="http://www.surrealanalysis.comcss/main.css" />
-  <link rel="stylesheet" href="http://www.surrealanalysis.comcss/custom.css" />
+  <link rel="stylesheet" href="http://www.surrealanalysis.com/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="http://www.surrealanalysis.com/css/main.css" />
+  <link rel="stylesheet" href="http://www.surrealanalysis.com/css/custom.css" />
   <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
   <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
-  <link rel="stylesheet" href="http://www.surrealanalysis.comcss/pygment_highlights.css" />
+  <link rel="stylesheet" href="http://www.surrealanalysis.com/css/pygment_highlights.css" />
   
   
   <meta property="og:title" content="Clojure Websockets with http-kit" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="/" />
-  <meta property="og:image" content="/img/infinity.png" />
+  <meta property="og:image" content="img/infinity.png" />
   
 </head>
 
@@ -44,7 +44,7 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="http://www.surrealanalysis.com">Home</a>
+      <a class="navbar-brand" href="http://www.surrealanalysis.com/">Home</a>
       <a class="navbar-brand" href="http://www.surrealanalysis.com/about">About</a>
     </div>
 
@@ -57,7 +57,7 @@
 	<div class="avatar-container">
 	  <div class="avatar-img-border">
       
-          <a title="Surreal Analysis" href="http://www.surrealanalysis.com">
+          <a title="Surreal Analysis" href="http://www.surrealanalysis.com/">
               <img class="avatar-img" src="http://www.surrealanalysis.com/img/infinity.png" alt="Surreal Analysis" />
           </a>
       
@@ -134,7 +134,7 @@ we went with <a href="http://www.http-kit.org/">http-kit</a>, the Clojure soluti
 
 <p>After this, all logic lives in the <code>process-message</code> function.</p>
 
-<p>For initial messages, we need to create a map of ids to channels we need to broadcast on.</p>
+<p>For initial messages, we need to create a map of IDs to channels we need to broadcast on.</p>
 
 <p>Because following is bidirectional in nature, we add the channel we just created to the list of channels listening to that ID.</p>
 
@@ -186,7 +186,7 @@ the MVP for a server that facilitates realtime bidirectional communication betwe
 
 <p>Feel free to test the above application with the following code,
  which utilizes <a href="https://github.com/stylefruits/gniazdo">gniazdo</a>, a Clojure websocket client
- to generate and test several user-ids with several longitude / latitude combinations.</p>
+ to generate and test several user IDs with longitude / latitude combinations.</p>
 
 <pre><code class="language-clojure">
  (ns spectate-server.client
@@ -314,7 +314,7 @@ the MVP for a server that facilitates realtime bidirectional communication betwe
           
 
     		  <li>
-      			<a href="http://www.surrealanalysis.comindex.xml" title="RSS">
+      			<a href="http://www.surrealanalysis.com/index.xml" title="RSS">
       			  <span class="fa-stack fa-lg">
         				<i class="fa fa-circle fa-stack-2x"></i>
         				<i class="fa fa-rss fa-stack-1x fa-inverse"></i>
@@ -330,7 +330,7 @@ the MVP for a server that facilitates realtime bidirectional communication betwe
     		  
     		  
     		  &nbsp;&bull;&nbsp;
-    		  <a href="http://www.surrealanalysis.com">Surreal Analysis</a>
+    		  <a href="http://www.surrealanalysis.com/">Surreal Analysis</a>
     		  
   	    </p>
   	        
@@ -343,9 +343,9 @@ the MVP for a server that facilitates realtime bidirectional communication betwe
   </div>
 </footer>
 
-<script src="http://www.surrealanalysis.comjs/jquery-1.11.2.min.js"></script>
-<script src="http://www.surrealanalysis.comjs/bootstrap.min.js"></script>
-<script src="http://www.surrealanalysis.comjs/main.js"></script>
+<script src="http://www.surrealanalysis.com/js/jquery-1.11.2.min.js"></script>
+<script src="http://www.surrealanalysis.com/js/bootstrap.min.js"></script>
+<script src="http://www.surrealanalysis.com/js/main.js"></script>
 
 
 
