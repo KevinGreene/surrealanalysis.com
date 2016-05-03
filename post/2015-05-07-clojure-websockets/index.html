@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>Clojure Websockets with http-kit</title>
+
+  <meta name="author" content="Kevin Greene" />
+  
+  
+
+  <meta name="generator" content="Hugo 0.15" />
+
+  <link rel="alternate" href="http://surrealanalysis.com/index.xml" type="application/rss+xml" title="Surreal Analysis">
+
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" />
+  <link rel="stylesheet" href="http://surrealanalysis.comcss/bootstrap.min.css" />
+  <link rel="stylesheet" href="http://surrealanalysis.comcss/main.css" />
+  <link rel="stylesheet" href="http://surrealanalysis.comcss/custom.css" />
+  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
+  <link rel="stylesheet" href="http://surrealanalysis.comcss/pygment_highlights.css" />
+  
+  
+  <meta property="og:title" content="Clojure Websockets with http-kit" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="/" />
+  <meta property="og:image" content="/img/infinity.png" />
+  
+</head>
+
+
+  <body>
+    <div id="wrapper">
+      <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="http://surrealanalysis.com">Home</a>
+      <a class="navbar-brand" href="http://surrealanalysis.com/about">About</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+      
+      </ul>
+    </div>
+
+	<div class="avatar-container">
+	  <div class="avatar-img-border">
+      
+          <a title="Surreal Analysis" href="http://surrealanalysis.com">
+              <img class="avatar-img" src="http://surrealanalysis.com/img/infinity.png" alt="Surreal Analysis" />
+          </a>
+      
+	  </div>
+	</div>
+
+  </div>
+</nav>
+
+
+      <div role="main" class="container main-content">
+
+        
+        
+
+
+
+
+
+<header class="header-section ">
+
+<div class="intro-header no-img">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="post-heading">
+          <h1>Clojure Websockets with http-kit</h1>
+      
+      
+      
+      <span class="post-meta">Posted on May 7, 2015</span>
+      
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</header>
+
+
+
+
+
+<div class="container">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+          <p>As I continue to evaluate Clojure, new opportunities present themselves. In the
+past, I&rsquo;ve done highly concurrent processing with Node.js
+or a JVM solution on top of Jetty. While these work, I never found them
+particularly enjoyable to use.</p>
+
+<p>Enter Clojure.</p>
+
+<p>Recently I worked with some colleagues on an app designed around spectating runners.
+To quickly create an MVP, we needed a server that would broadcast coordinates periodically to all users who cared.
+Websockets seemed like the way to go,
+and because various members on the team had mixed experiences with <a href="http://socket.io/">socket.io</a>,
+we went with <a href="http://www.http-kit.org/">http-kit</a>, the Clojure solution for websockets.</p>
+
+<p>The actual definition of the server is very easy to setup:</p>
+
+<pre><code class="language-clojure">(defonce server (atom nil))
+
+(defn app [request]
+  (with-channel request channel
+    (on-close channel process-close)
+    (on-receive channel (fn [data]
+                          (process-message channel data)))))
+
+(defn -main []
+  (reset! server (run-server #'app {:port 8080})))
+</code></pre>
+
+<p>After this, all logic lives in the <code>process-message</code> function.</p>
+
+<p>For initial messages, we need to create a map of ids to channels we need to broadcast on.</p>
+
+<p>Because following is bidirectional in nature, we add the channel we just created to the list of channels listening to that ID.</p>
+
+<pre><code class="language-clojure">(def channel-map (atom {}))
+
+(defn process-message [channel message]
+  (let [json-data (json/read-str message :key-fn keyword)]
+    (if (:initialRequest json-data)
+      (process-initial-message json-data channel)
+      (process-geo-message json-data))))
+
+(defn process-initial-message [json-data channel]
+  (doseq [follow-id-string (:following json-data)]
+    (let [follow-id (keyword (str follow-id-string))]
+      (if (follow-id @channel-map)
+        (swap! channel-map assoc follow-id
+               (conj (get-in @channel-map [follow-id]) channel))
+        (swap! channel-map assoc follow-id [channel])))))
+</code></pre>
+
+<p>Each time we receive a message after the initial request,
+we simply broadcast whatever we receive to the channels registered as listening to the specific ID.</p>
+
+<pre><code class="language-clojure">(defn process-geo-message [json-data]
+  (let [user-id (:userId json-data)
+        channels ((keyword (str user-id)) @channel-map)]
+    (doseq [channel channels]
+      (send! channel
+        (json/write-str
+          {:userId user-id
+           :lat (:lat json-data)
+           :lng (:lng json-data)}))))))
+</code></pre>
+
+<p>Combine all of the previous code snippets, and the result is
+the MVP for a server that facilitates realtime bidirectional communication between several clients over websockets.</p>
+
+<p>This is by no means the professional, final solution. It:</p>
+
+<ul>
+<li>Has no authentication</li>
+<li>Relies purely on user input to maintain the ID</li>
+<li>Doesn&rsquo;t clean up when users disconnect</li>
+</ul>
+
+<p>That said, this is still a working solution to our problem, and let us get where we needed to be in as much time as it has taken me to type up this blog post.
+ In addition to demonstrating Clojure is a viable solution for websockets,
+ it also demonstrated that Clojure is a viable solution for quickly prototyping an application.</p>
+
+<p>Feel free to test the above application with the following code,
+ which utilizes <a href="https://github.com/stylefruits/gniazdo">gniazdo</a>, a Clojure websocket client
+ to generate and test several user-ids with several longitude / latitude combinations.</p>
+
+<pre><code class="language-clojure">
+ (ns spectate-server.client
+  (:require [clojure.tools.logging :as log])
+  (:require [clojure.data.json :as json])
+  (require [gniazdo.core :as ws]))
+
+(def url &quot;ws://localhost:8080&quot;)
+
+(def id-channel-map (atom {}))
+
+(def number-of-users 100)
+
+;; Converts a keyword to an integer
+(defn parse-keyword-int [k]
+  (Integer. (re-find  #&quot;\d+&quot; (str k)))
+
+(defn on-receive [user-id msg]
+  (log/info &quot;User &quot; user-id &quot;Received &quot; msg))
+
+(defn createSocket [user-id]
+  (ws/connect url
+              :on-receive (partial on-receive user-id)))
+
+(defn create-initial-msg [user-id following-ids]
+  (json/write-str {
+                   :initialRequest true
+                   :following following-ids
+                   :userId user-id}))
+
+(defn create-geo-msg [user-id lat lng]
+  (json/write-str {:userId user-id
+                   :lat lat
+                   :lng lng}))
+
+(defn -main []
+  (dotimes [user-id number-of-users]
+    (swap! id-channel-map assoc (keyword (str user-id))
+           (createSocket user-id)))
+
+  (doseq [[user-id-key socket] @id-channel-map]
+    (let [user-id (parse-keyword-int user-id-key)]
+      (ws/send-msg socket (create-initial-msg user-id [user-id (inc user-id)]))))
+
+  (dotimes [x 1000]
+    (let [user-id (rand-int number-of-users) user-id-key (keyword (str user-id))
+          socket (user-id-key @id-channel-map)]
+      (ws/send-msg socket (create-geo-msg user-id (rand 100) (rand 100)))
+      )))
+</code></pre>
+
+      </article>
+
+      <ul class="pager blog-pager">
+        
+        <li class="previous">
+          <a href="http://surrealanalysis.com/post/2015-03-05-games/" data-toggle="tooltip" data-placement="top" title="Games, Expectations, and Anticipating Users">&larr; Previous Post</a>
+        </li>
+        
+        
+        <li class="next">
+          <a href="http://surrealanalysis.com/post/simple-redis-api/" data-toggle="tooltip" data-placement="top" title="A Simple Redis Slack Bot">Next Post &rarr;</a>
+        </li>
+        
+      </ul>
+
+      
+
+    </div>
+  </div>
+</div>
+
+        
+
+      </div>
+
+      <footer>
+  <div class="container beautiful-jekyll-footer">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+          
+          <li>
+            <a href="https://github.com/KevinGreene" title="GitHub">
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+		      
+          <li>
+            <a href="https://twitter.com/SurrealAnalysis" title="Twitter">
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+		      
+          <li>
+            <a href="mailto:kevindgreene@gmail.com" title="Email me">
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+		      
+          <li>
+            <a href="https://linkedin.com/in/kevindgreene" title="LinkedIn">
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+	    	  
+          
+          
+
+    		  <li>
+      			<a href="http://surrealanalysis.comindex.xml" title="RSS">
+      			  <span class="fa-stack fa-lg">
+        				<i class="fa fa-circle fa-stack-2x"></i>
+        				<i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+      			  </span>
+      			</a>
+    		  </li>		
+
+        </ul>
+        <p class="copyright text-muted">
+    		  Kevin Greene
+    		  &nbsp;&bull;&nbsp;
+    		  2016
+    		  
+    		  
+    		  &nbsp;&bull;&nbsp;
+    		  <a href="http://surrealanalysis.com">Surreal Analysis</a>
+    		  
+  	    </p>
+  	        
+    		<p class="theme-by text-muted">
+    		  Theme by
+    		  <a href="http://deanattali.com/beautiful-jekyll/">beautiful-jekyll</a>
+    		</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="http://surrealanalysis.comjs/jquery-1.11.2.min.js"></script>
+<script src="http://surrealanalysis.comjs/bootstrap.min.js"></script>
+<script src="http://surrealanalysis.comjs/main.js"></script>
+
+
+
+    </div>
+  </body>
+</html>
+

@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>Games, Expectations, and Anticipating Users</title>
+
+  <meta name="author" content="Kevin Greene" />
+  
+  
+
+  <meta name="generator" content="Hugo 0.15" />
+
+  <link rel="alternate" href="http://surrealanalysis.com/index.xml" type="application/rss+xml" title="Surreal Analysis">
+
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" />
+  <link rel="stylesheet" href="http://surrealanalysis.comcss/bootstrap.min.css" />
+  <link rel="stylesheet" href="http://surrealanalysis.comcss/main.css" />
+  <link rel="stylesheet" href="http://surrealanalysis.comcss/custom.css" />
+  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
+  <link rel="stylesheet" href="http://surrealanalysis.comcss/pygment_highlights.css" />
+  
+  
+  <meta property="og:title" content="Games, Expectations, and Anticipating Users" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="/" />
+  <meta property="og:image" content="/img/infinity.png" />
+  
+</head>
+
+
+  <body>
+    <div id="wrapper">
+      <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="http://surrealanalysis.com">Home</a>
+      <a class="navbar-brand" href="http://surrealanalysis.com/about">About</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+      
+      </ul>
+    </div>
+
+	<div class="avatar-container">
+	  <div class="avatar-img-border">
+      
+          <a title="Surreal Analysis" href="http://surrealanalysis.com">
+              <img class="avatar-img" src="http://surrealanalysis.com/img/infinity.png" alt="Surreal Analysis" />
+          </a>
+      
+	  </div>
+	</div>
+
+  </div>
+</nav>
+
+
+      <div role="main" class="container main-content">
+
+        
+        
+
+
+
+
+
+<header class="header-section ">
+
+<div class="intro-header no-img">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="post-heading">
+          <h1>Games, Expectations, and Anticipating Users</h1>
+      
+      
+      
+      <span class="post-meta">Posted on March 6, 2015</span>
+      
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</header>
+
+
+
+
+
+<div class="container">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+          
+
+<p>I love games, and I love game theory. Recently Spantree started doing lightning talks, which gave me the chance to share some of my favorite group &ldquo;games&rdquo;, and hopefully provide some insight on clients.</p>
+
+<h3 id="two-thirds-game:7d7773ffeb986585cc8edac65afb682f">Two Thirds Game</h3>
+
+<p>In this game, each person submits an integer between 0 and 100. The winner is the person who picked a number closer to two thirds of the average of all submitted numbers.</p>
+
+<p>Strategically, you can reason that no one will guess above 66, as that is <sup>2</sup>&frasl;<sub>3</sub> of 100, the maximum possible guess.</p>
+
+<p>But, if no one guesses above 66, you should not guess above 44. This continues on until the only logical guess is 1. A simple strategy and a simple conclusion.</p>
+
+<h3 id="the-pirate-game:7d7773ffeb986585cc8edac65afb682f">The Pirate Game</h3>
+
+<p>The pirate game is a little more complex. In this game, everyone represents pirates, that can be strictly ordered in terms of seniority.</p>
+
+<p>After finding 100 gold coins, the pirates must divide up the gold. The most senior pirate proposes a plan. If at least half the pirates, including the most senior, approve the plan then it is followed. Otherwise, that pirate is thrown overboard, and it moves on to the next pirate.</p>
+
+<p>Working backwards, we can see that the most senior pirate makes out incredibly well. If it gets down to the last two pirates, the most senior of them will simply give themselves all the money, and the other pirate none. In our case, there were 7 participants, so we can call the pirates A - G, with A being the most senior.</p>
+
+<p>Pirate G will do anything to prevent it from passing to Pirate F, so Pirate E can simply give Pirate G a single gold to secure their vote, taking the 99 other pieces for themselves. From here, Pirate F will take anything to make sure it doesn&rsquo;t pass to Pirate E, so Pirate D needs only offer them a single gold. Working upwards, we see the logical, ideal solution is Pirate A with 97, Pirate C with 1, Pirate E with 1, and Pirate G with 1.</p>
+
+<h3 id="people-aren-t-rational:7d7773ffeb986585cc8edac65afb682f">People Aren&rsquo;t Rational</h3>
+
+<p>When we actually followed through, the results were far different from what we expected.</p>
+
+<p>In the first example, the average ended up being 22. Some people followed the process of multiplying the maximum by <sup>2</sup>&frasl;<sub>3</sub> only twice, and guessed 44. Others followed that pattern many times, and got closer to 5 or 6. But, only the people who anticipated both actually succeeded.</p>
+
+<p>In the pirate game, Jonathan, acting as senior pirate, initially suggested 50% for himself, which was quickly met with cries of dismay. He quickly lowered his share to 35%, and was able to reach a narrow agreement doling out the rest more or less equally.</p>
+
+<p>It doesn&rsquo;t matter that mathematically, the <sup>2</sup>&frasl;<sub>3</sub> game should always be 1. It doesn&rsquo;t matter that logically, Jonathan should have been able to keep 97 coins. Because in the end, you would have lost either game if you went the pure logic route. Instead, you need to anticipate others wants and emotions. Even after explaining the pirate game, few people would accept only 1 coin, as they still felt cheated.</p>
+
+<p>Similarly, in order to successfully develop software you need to take into account the emotional and human aspects. It is not just the experience that is technically correct, and software is far more than a collection of features. Though the perfect combination of human appeal and technical excellence is rare, it is worth striving for.</p>
+
+      </article>
+
+      <ul class="pager blog-pager">
+        
+        <li class="previous">
+          <a href="http://surrealanalysis.com/post/2015-02-05-partition-by-clojure/" data-toggle="tooltip" data-placement="top" title="Partition By in Clojure">&larr; Previous Post</a>
+        </li>
+        
+        
+        <li class="next">
+          <a href="http://surrealanalysis.com/post/2015-05-07-clojure-websockets/" data-toggle="tooltip" data-placement="top" title="Clojure Websockets with http-kit">Next Post &rarr;</a>
+        </li>
+        
+      </ul>
+
+      
+
+    </div>
+  </div>
+</div>
+
+        
+
+      </div>
+
+      <footer>
+  <div class="container beautiful-jekyll-footer">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+          
+          <li>
+            <a href="https://github.com/KevinGreene" title="GitHub">
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+		      
+          <li>
+            <a href="https://twitter.com/SurrealAnalysis" title="Twitter">
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+		      
+          <li>
+            <a href="mailto:kevindgreene@gmail.com" title="Email me">
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+		      
+          <li>
+            <a href="https://linkedin.com/in/kevindgreene" title="LinkedIn">
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+	    	  
+          
+          
+
+    		  <li>
+      			<a href="http://surrealanalysis.comindex.xml" title="RSS">
+      			  <span class="fa-stack fa-lg">
+        				<i class="fa fa-circle fa-stack-2x"></i>
+        				<i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+      			  </span>
+      			</a>
+    		  </li>		
+
+        </ul>
+        <p class="copyright text-muted">
+    		  Kevin Greene
+    		  &nbsp;&bull;&nbsp;
+    		  2016
+    		  
+    		  
+    		  &nbsp;&bull;&nbsp;
+    		  <a href="http://surrealanalysis.com">Surreal Analysis</a>
+    		  
+  	    </p>
+  	        
+    		<p class="theme-by text-muted">
+    		  Theme by
+    		  <a href="http://deanattali.com/beautiful-jekyll/">beautiful-jekyll</a>
+    		</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="http://surrealanalysis.comjs/jquery-1.11.2.min.js"></script>
+<script src="http://surrealanalysis.comjs/bootstrap.min.js"></script>
+<script src="http://surrealanalysis.comjs/main.js"></script>
+
+
+
+    </div>
+  </body>
+</html>
+
