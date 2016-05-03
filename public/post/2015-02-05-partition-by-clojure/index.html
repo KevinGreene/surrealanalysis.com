@@ -117,7 +117,7 @@ C0000039|...|Feline|...
 
 <p>While a Groovy or Python solution was possible, this was definitely a problem that would require processing things line by line.</p>
 
-<p>Instead of relying on keeping track of state line by line, this seemed like a great opportunity to try out <a href="http://clojure.org">Clojure</a>. The crux of the application boils down to two functions</p>
+<p>Instead of relying on keeping track of state line by line, this seemed like a great opportunity to try out <a href="http://clojure.org">Clojure</a>. The crux of the application boils down to two functions.</p>
 
 <p>First, the processLine function. This takes in a given string, and returns a map with the given ID and word.</p>
 
@@ -130,7 +130,7 @@ C0000039|...|Feline|...
 
 <p>While the syntax is different, this is fairly similar to what would have been used in Groovy or Python.</p>
 
-<p>After we read in a line, we need to group the lines based on their ID. This is when Clojure began to really show improvement in brevity and style. The function <code>partition-by</code> allows us to create sequences of groups based on the result of a given function. In this case, the given function is simply getting the ID of a line.</p>
+<p>After we read in a line, we need to group the lines based on their ID. This is when Clojure began to really show improvement in brevity and style. The second function, <code>partition-by</code>, allows us to create sequences of groups based on the result of a given function. In this case, the given function is simply getting the ID of a line.</p>
 
 <pre><code class="language-clojure">(defn groupSynonymsById
   [allSynonyms]

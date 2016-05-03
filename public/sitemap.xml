@@ -3,8 +3,13 @@
   
   <url>
     <loc>http://www.surrealanalysis.com/</loc>
-    <lastmod>2016-04-22T01:03:14-04:00</lastmod>
+    <lastmod>2016-05-03T01:14:12-04:00</lastmod>
     <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>http://www.surrealanalysis.com/post/readable-clojure-through-threading/</loc>
+    <lastmod>2016-05-03T01:14:12-04:00</lastmod>
   </url>
   
   <url>

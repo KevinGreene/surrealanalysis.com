@@ -8,8 +8,44 @@
     <language>en-us</language>
     <managingEditor>kevindgreene@gmail.com (Kevin Greene)</managingEditor>
     <webMaster>kevindgreene@gmail.com (Kevin Greene)</webMaster>
-    <lastBuildDate>Fri, 22 Apr 2016 01:03:14 -0400</lastBuildDate>
+    <lastBuildDate>Tue, 03 May 2016 01:14:12 -0400</lastBuildDate>
     <atom:link href="http://www.surrealanalysis.com/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Readable Clojure Through Threading</title>
+      <link>http://www.surrealanalysis.com/post/readable-clojure-through-threading/</link>
+      <pubDate>Tue, 03 May 2016 01:14:12 -0400</pubDate>
+      <author>kevindgreene@gmail.com (Kevin Greene)</author>
+      <guid>http://www.surrealanalysis.com/post/readable-clojure-through-threading/</guid>
+      <description>&lt;p&gt;Clojure, like many Lisps, sometimes struggles to attract newcomers who claim it&amp;rsquo;s &amp;ldquo;hard to read&amp;rdquo;. Any paradigm shift requires time, but I myself struggled to read Clojure I had written early on. Nested parentheses and REPL-driven development made the result come quickly, but it often looked ugly. However, the thread operator &lt;code&gt;-&amp;gt;&lt;/code&gt; and all of its cousins fix that.&lt;/p&gt;
+
+&lt;p&gt;A common pattern I found myself in over and over was a series of simple, composable function calls on a single value. After all, small useful functions is a big draw of Clojure. But many small functions next to one another often makes it look far less clear.&lt;/p&gt;
+
+&lt;p&gt;For example, in many ciphers, strings first need to be converted to lowercase, then stripped of the whitespace characters. The quick way to do that in Clojure is&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-clojure&#34;&gt;(require &#39;[clojure.string :as :str])
+(defn preprocess-string [s]
+ (str/replace (str/lower-case s) #&amp;quot;\s+&amp;quot; &amp;quot;&amp;quot;))
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This isn&amp;rsquo;t too hard to read, but it gets more difficult as functions are added. If it&amp;rsquo;s determined that somehow the cipher is made stronger by reversing the string, this becomes&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-clojure&#34;&gt;(defn preprocess-string [s]
+ (str/reverse (str/replace (str/lower-case s) #&amp;quot;\s+&amp;quot; &amp;quot;&amp;quot;)))
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Already this is getting a bit unwieldy. The thread operator simplifies this to:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-clojure&#34;&gt;(defn preprocess-string [s]
+ (-&amp;gt; s
+     (str/lower-case)
+     (str/replace #&amp;quot;\s+&amp;quot; &amp;quot;&amp;quot;)
+     (str/reverse)))
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The thread operator here inserts &lt;code&gt;s&lt;/code&gt; as the argument to &lt;code&gt;str/lower-case&lt;/code&gt;, then inserts that entire form, &lt;code&gt;(str/lower-case s)&lt;/code&gt;, as the first argument in &lt;code&gt;str/replace&lt;/code&gt;, and so on. As a result, it&amp;rsquo;s functionally equivalent, but now any humans reading it can see clearly that you would take the string, first lower-case it, then replace the whitespace, then reverse.&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>A Simple Redis Slack Bot</title>
@@ -236,7 +272,7 @@ C0000039|...|Feline|...
 
 &lt;p&gt;While a Groovy or Python solution was possible, this was definitely a problem that would require processing things line by line.&lt;/p&gt;
 
-&lt;p&gt;Instead of relying on keeping track of state line by line, this seemed like a great opportunity to try out &lt;a href=&#34;http://clojure.org&#34;&gt;Clojure&lt;/a&gt;. The crux of the application boils down to two functions&lt;/p&gt;
+&lt;p&gt;Instead of relying on keeping track of state line by line, this seemed like a great opportunity to try out &lt;a href=&#34;http://clojure.org&#34;&gt;Clojure&lt;/a&gt;. The crux of the application boils down to two functions.&lt;/p&gt;
 
 &lt;p&gt;First, the processLine function. This takes in a given string, and returns a map with the given ID and word.&lt;/p&gt;
 
@@ -249,7 +285,7 @@ C0000039|...|Feline|...
 
 &lt;p&gt;While the syntax is different, this is fairly similar to what would have been used in Groovy or Python.&lt;/p&gt;
 
-&lt;p&gt;After we read in a line, we need to group the lines based on their ID. This is when Clojure began to really show improvement in brevity and style. The function &lt;code&gt;partition-by&lt;/code&gt; allows us to create sequences of groups based on the result of a given function. In this case, the given function is simply getting the ID of a line.&lt;/p&gt;
+&lt;p&gt;After we read in a line, we need to group the lines based on their ID. This is when Clojure began to really show improvement in brevity and style. The second function, &lt;code&gt;partition-by&lt;/code&gt;, allows us to create sequences of groups based on the result of a given function. In this case, the given function is simply getting the ID of a line.&lt;/p&gt;
 
 &lt;pre&gt;&lt;code class=&#34;language-clojure&#34;&gt;(defn groupSynonymsById
   [allSynonyms]

@@ -34,7 +34,7 @@ First, the processLine function. This takes in a given string, and returns a map
 
 While the syntax is different, this is fairly similar to what would have been used in Groovy or Python.
 
-After we read in a line, we need to group the lines based on their ID. This is when Clojure began to really show improvement in brevity and style. The function `partition-by` allows us to create sequences of groups based on the result of a given function. In this case, the given function is simply getting the ID of a line.
+After we read in a line, we need to group the lines based on their ID. This is when Clojure began to really show improvement in brevity and style. The second function, `partition-by`, allows us to create sequences of groups based on the result of a given function. In this case, the given function is simply getting the ID of a line.
 
 ```clojure
 (defn groupSynonymsById
