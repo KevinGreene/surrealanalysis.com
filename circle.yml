@@ -19,7 +19,7 @@ test:
   pre:
     - pygmentize -V
   override:
-    - hugo -v
+    - hugo -v  --theme=beautifulhugo
 
 deployment:
   s3up:
