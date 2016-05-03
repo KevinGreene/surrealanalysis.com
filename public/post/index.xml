@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Posts on Surreal Analysis</title>
-    <link>http://surrealanalysis.com/post/</link>
+    <link>http://kevingreene.github.io/surrealanalysis.com/post/</link>
     <description>Recent content in Posts on Surreal Analysis</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <managingEditor>kevindgreene@gmail.com (Kevin Greene)</managingEditor>
     <webMaster>kevindgreene@gmail.com (Kevin Greene)</webMaster>
     <lastBuildDate>Fri, 22 Apr 2016 01:03:14 -0400</lastBuildDate>
-    <atom:link href="http://surrealanalysis.com/post/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://kevingreene.github.io/surrealanalysis.com/post/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>A Simple Redis Slack Bot</title>
-      <link>http://surrealanalysis.com/post/simple-redis-api/</link>
+      <link>http://kevingreene.github.io/surrealanalysis.com/post/simple-redis-api/</link>
       <pubDate>Fri, 22 Apr 2016 01:03:14 -0400</pubDate>
       <author>kevindgreene@gmail.com (Kevin Greene)</author>
-      <guid>http://surrealanalysis.com/post/simple-redis-api/</guid>
+      <guid>http://kevingreene.github.io/surrealanalysis.com/post/simple-redis-api/</guid>
       <description>&lt;p&gt;Though I&amp;rsquo;m many years late to the game, I just started playing with Ruby, and I&amp;rsquo;ve been enjoying it quite a bit. After creating an API with Sinatra for an internal testing tool at Spantree, I was ready to try it out on a side project.&lt;/p&gt;
 
 &lt;p&gt;Because I&amp;rsquo;m a remote employee, I depend heavily on Slack. Slack keeps me connected to the community at my company, the cities I&amp;rsquo;m in, and the technologies I use. As a result, a lot of my side projects end up being enhancements to Slack. While using Slack, I often want to keep track of a simple number, or a simple value. When I want to do this in an application, my default is Redis, so why not use that while Slacking?&lt;/p&gt;
@@ -37,10 +37,10 @@
     
     <item>
       <title>Clojure Websockets with http-kit</title>
-      <link>http://surrealanalysis.com/post/2015-05-07-clojure-websockets/</link>
+      <link>http://kevingreene.github.io/surrealanalysis.com/post/2015-05-07-clojure-websockets/</link>
       <pubDate>Thu, 07 May 2015 01:18:26 -0400</pubDate>
       <author>kevindgreene@gmail.com (Kevin Greene)</author>
-      <guid>http://surrealanalysis.com/post/2015-05-07-clojure-websockets/</guid>
+      <guid>http://kevingreene.github.io/surrealanalysis.com/post/2015-05-07-clojure-websockets/</guid>
       <description>&lt;p&gt;As I continue to evaluate Clojure, new opportunities present themselves. In the
 past, I&amp;rsquo;ve done highly concurrent processing with Node.js
 or a JVM solution on top of Jetty. While these work, I never found them
@@ -178,10 +178,10 @@ the MVP for a server that facilitates realtime bidirectional communication betwe
     
     <item>
       <title>Games, Expectations, and Anticipating Users</title>
-      <link>http://surrealanalysis.com/post/2015-03-05-games/</link>
+      <link>http://kevingreene.github.io/surrealanalysis.com/post/2015-03-05-games/</link>
       <pubDate>Fri, 06 Mar 2015 01:15:44 -0400</pubDate>
       <author>kevindgreene@gmail.com (Kevin Greene)</author>
-      <guid>http://surrealanalysis.com/post/2015-03-05-games/</guid>
+      <guid>http://kevingreene.github.io/surrealanalysis.com/post/2015-03-05-games/</guid>
       <description>
 
 &lt;p&gt;I love games, and I love game theory. Recently Spantree started doing lightning talks, which gave me the chance to share some of my favorite group &amp;ldquo;games&amp;rdquo;, and hopefully provide some insight on clients.&lt;/p&gt;
@@ -220,10 +220,10 @@ the MVP for a server that facilitates realtime bidirectional communication betwe
     
     <item>
       <title>Partition By in Clojure</title>
-      <link>http://surrealanalysis.com/post/2015-02-05-partition-by-clojure/</link>
+      <link>http://kevingreene.github.io/surrealanalysis.com/post/2015-02-05-partition-by-clojure/</link>
       <pubDate>Thu, 05 Feb 2015 01:14:12 -0400</pubDate>
       <author>kevindgreene@gmail.com (Kevin Greene)</author>
-      <guid>http://surrealanalysis.com/post/2015-02-05-partition-by-clojure/</guid>
+      <guid>http://kevingreene.github.io/surrealanalysis.com/post/2015-02-05-partition-by-clojure/</guid>
       <description>&lt;p&gt;On every professional software engineering job I&amp;rsquo;ve had, data transformation always played a role. Most recently, at Spantree we needed to get a massive corpus of synonyms into the file format readable by &lt;a href=&#34;http://www.elasticsearch.org/&#34;&gt;Elasticsearch&lt;/a&gt;.&lt;/p&gt;
 
 &lt;p&gt;We received a 640MB text file, with over 5.4 million lines of the form&lt;/p&gt;
@@ -268,10 +268,10 @@ C0000039|...|Feline|...
     
     <item>
       <title>Monit: The Quick Fix</title>
-      <link>http://surrealanalysis.com/post/monit-redis/</link>
+      <link>http://kevingreene.github.io/surrealanalysis.com/post/monit-redis/</link>
       <pubDate>Thu, 20 Mar 2014 01:11:51 -0400</pubDate>
       <author>kevindgreene@gmail.com (Kevin Greene)</author>
-      <guid>http://surrealanalysis.com/post/monit-redis/</guid>
+      <guid>http://kevingreene.github.io/surrealanalysis.com/post/monit-redis/</guid>
       <description>
 
 &lt;p&gt;Ideally, in a production system, everything works perfectly. Services never mysteriously crash, free memory is constantly available, and CPU load rarely spikes above 50%. Unfortunately, this is not always the case.&lt;/p&gt;
