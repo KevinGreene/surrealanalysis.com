@@ -20,7 +20,7 @@ C0000039|...|Feline|...
 
 While a Groovy or Python solution was possible, this was definitely a problem that would require processing things line by line.
 
-Instead of relying on keeping track of state line by line, this seemed like a great opportunity to try out [Clojure](http://clojure.org). The crux of the application boils down to two functions
+Instead of relying on keeping track of state line by line, this seemed like a great opportunity to try out [Clojure](http://clojure.org). The crux of the application boils down to two functions.
 
 First, the processLine function. This takes in a given string, and returns a map with the given ID and word.
 
