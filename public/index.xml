@@ -70,7 +70,7 @@ we went with &lt;a href=&#34;http://www.http-kit.org/&#34;&gt;http-kit&lt;/a&gt;
 
 &lt;p&gt;After this, all logic lives in the &lt;code&gt;process-message&lt;/code&gt; function.&lt;/p&gt;
 
-&lt;p&gt;For initial messages, we need to create a map of ids to channels we need to broadcast on.&lt;/p&gt;
+&lt;p&gt;For initial messages, we need to create a map of IDs to channels we need to broadcast on.&lt;/p&gt;
 
 &lt;p&gt;Because following is bidirectional in nature, we add the channel we just created to the list of channels listening to that ID.&lt;/p&gt;
 
@@ -122,7 +122,7 @@ the MVP for a server that facilitates realtime bidirectional communication betwe
 
 &lt;p&gt;Feel free to test the above application with the following code,
  which utilizes &lt;a href=&#34;https://github.com/stylefruits/gniazdo&#34;&gt;gniazdo&lt;/a&gt;, a Clojure websocket client
- to generate and test several user-ids with several longitude / latitude combinations.&lt;/p&gt;
+ to generate and test several user IDs with longitude / latitude combinations.&lt;/p&gt;
 
 &lt;pre&gt;&lt;code class=&#34;language-clojure&#34;&gt;
  (ns spectate-server.client
