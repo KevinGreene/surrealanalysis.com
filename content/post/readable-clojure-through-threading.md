@@ -116,7 +116,7 @@ we can instead write this as
  (cond-> n
          cond-1 (step-1)
          cond-2 (step-2)
-         cond-3 (step-3)
+         cond-3 (step-3)))
 ```
 
 I personally like using `cond->` as a way to conditionally associate elements in a map. When building up a body for a request, a common pattern might be
