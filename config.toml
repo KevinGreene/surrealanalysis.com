@@ -12,3 +12,10 @@ title = "Surreal Analysis"
   github = "KevinGreene"
   twitter = "SurrealAnalysis"
   linkedin = "in/kevindgreene"
+
+[[menu.main]]
+    name = "about me"
+    pre = "<i class='fa fa-heart'></i>"
+    weight = -110
+    identifier = "about"
+    url = "/about/"

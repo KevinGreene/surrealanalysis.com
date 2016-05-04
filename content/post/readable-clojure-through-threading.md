@@ -119,7 +119,7 @@ we can instead write this as
          cond-3 (step-3)
 ```
 
-I personally like using `cond->` as a way to conditionally associate elements in a map. When building up a body for a request, a common pattern might beautifulhugo
+I personally like using `cond->` as a way to conditionally associate elements in a map. When building up a body for a request, a common pattern might be
 
 ``` clojure
 (defn build-request [initial-map]
