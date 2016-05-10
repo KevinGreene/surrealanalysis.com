@@ -1,6 +1,6 @@
 +++
 date = "2016-05-09T01:14:12-04:00"
-draft = true
+draft = false
 title = "Useful Leiningen Plugins"
 
 +++
@@ -30,11 +30,33 @@ You can also use Alembic to try out any libraries without adding them to your `p
 (distill '[cheshire "5.5.0"])
 ```
 
-You can add Alembic to every REPL you start by adding `{:repl {:plugins [[lein-ancient "0.6.2"]]}}` to `~/.lein/profiles.clj`.
+You can add Alembic to every REPL by adding the following to `~/.lein/profiles.clj`.
+
+```
+{:repl {:dependencies [[alembic "0.3.2"]]}}
+``` 
 
 ### Lein Ancient
 
+As you come back to older projects, it can be useful to update them to the latest library. Instead of going to [Clojars)[https://clojars.org/] for each library you use, instead consider using [lein-ancient](https://github.com/xsc/lein-ancient).
 
+By using `lein-ancient`, you can determine the outdated libraries in your `project.clj`. Running `lein ancient` will produce output similar to
+
+```
+[org.webjars/font-awesome "4.6.2"] is available but we use "4.6.1"
+[org.webjars.bower/tether "1.3.2"] is available but we use "1.3.1"
+[org.clojure/tools.cli "0.3.5"] is available but we use "0.3.4"
+[clj-http "3.0.1"] is available but we use "2.1.0"
+[lein-figwheel "0.5.3-1"] is available but we use "0.5.2"
+```
+
+From here, you can update any libraries as you see fit. As always, be careful blinding upgrading dependencies, and be sure to test extensively after changing any of them.
+
+You can add lein-ancient to every project by adding the following to `~/.lein/profiles.clj`.
+
+```
+{:user {:plugins [[lein-ancient "0.6.10"]]}}
+``` 
 
 ### Eastwood
 
@@ -82,3 +104,9 @@ test/daily_cider/test/processor.clj:1:1: unused-namespaces: Namespace clojure.st
 Subprocess failed
 ```
 
+
+You can add Eastwood to every project by adding the following to `~/.lein/profiles.clj`.
+
+```
+{:user {:plugins [[jonase/eastwood "0.2.3"]]}}
+``` 
