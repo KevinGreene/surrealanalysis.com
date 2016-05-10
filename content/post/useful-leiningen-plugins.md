@@ -5,7 +5,7 @@ title = "Useful Leiningen Plugins"
 
 +++
 
-Clojure has a great development flow, but a few tools aren't immediately obvious. By adding a few dependencies and plugins to every Leiningen project, you can make your development workflow smoother, quicker, and more effective.
+Clojure has a great development flow, but a few tools aren't included by default. By adding a few dependencies and plugins to `~/.lein/profiles.clj`, you can make your development workflow smoother, quicker, and more effective.
 
 <!--more-->
 
