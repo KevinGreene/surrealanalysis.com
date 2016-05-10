@@ -26,7 +26,7 @@ With Alembic as a dependency in your project, you can easily reload your `projec
 You can also use Alembic to try out any libraries without adding them to your `project.clj`, by running
 
 ``` clojure
-(use 'alembic-still)
+(use 'alembic.still)
 (distill '[cheshire "5.5.0"])
 ```
 
