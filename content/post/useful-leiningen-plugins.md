@@ -50,7 +50,7 @@ By using `lein-ancient`, you can determine the outdated libraries in your `proje
 [lein-figwheel "0.5.3-1"] is available but we use "0.5.2"
 ```
 
-From here, you can update any libraries as you see fit. As always, be careful blinding upgrading dependencies, and be sure to test extensively after changing any of them.
+From here, you can update any libraries as you see fit. As always, be careful blindly upgrading dependencies, and be sure to test extensively after changing any of them.
 
 You can add lein-ancient to every project by adding the following to `~/.lein/profiles.clj`.
 
