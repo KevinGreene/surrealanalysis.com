@@ -30,7 +30,7 @@ You can also use Alembic to try out any libraries without adding them to your `p
 (distill '[cheshire "5.5.0"])
 ```
 
-You can add Alembic to every REPL by adding the following to `~/.lein/profiles.clj`.
+You can add Alembic to every REPL by merging the following into `~/.lein/profiles.clj`.
 
 ```
 {:repl {:dependencies [[alembic "0.3.2"]]}}
@@ -40,7 +40,7 @@ You can add Alembic to every REPL by adding the following to `~/.lein/profiles.c
 
 As you come back to older projects, it can be useful to update them to the latest library. Instead of going to [Clojars)[https://clojars.org/] for each library you use, instead consider using [lein-ancient](https://github.com/xsc/lein-ancient).
 
-By using `lein-ancient`, you can determine the outdated libraries in your `project.clj`. Running `lein ancient` will produce output similar to
+By using lein-ancient, you can determine the outdated libraries in your `project.clj`. Running `lein ancient` will produce output similar to
 
 ```
 [org.webjars/font-awesome "4.6.2"] is available but we use "4.6.1"
@@ -52,7 +52,7 @@ By using `lein-ancient`, you can determine the outdated libraries in your `proje
 
 From here, you can update any libraries as you see fit. As always, be careful blindly upgrading dependencies, and be sure to test extensively after changing any of them.
 
-You can add lein-ancient to every project by adding the following to `~/.lein/profiles.clj`.
+You can add lein-ancient to every project by merging the following into `~/.lein/profiles.clj`.
 
 ```
 {:user {:plugins [[lein-ancient "0.6.10"]]}}
@@ -105,7 +105,7 @@ Subprocess failed
 ```
 
 
-You can add Eastwood to every project by adding the following to `~/.lein/profiles.clj`.
+You can add Eastwood to every project by merging the following into `~/.lein/profiles.clj`.
 
 ```
 {:user {:plugins [[jonase/eastwood "0.2.3"]]}}
