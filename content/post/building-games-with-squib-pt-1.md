@@ -15,7 +15,7 @@ Now that we have the prerequisites installed, we need a game to build. We're goi
 
 ## Scaffolding
 
-Squib has an excellent built in scaffolding tool. Do use this, you would first run `gem install squib`, followed by `squib init triangle-deck`. This would create a directory with all of the files needed to start. But, I find that generators can be confusing when learning a new tool, so we're going to build up all the files manually. 
+Squib has an excellent built in scaffolding tool. To use this, you would first run `gem install squib`, followed by `squib init triangle-deck`. This would create a directory with all of the files needed to start. But I find that generators can be confusing when learning a new tool, so we're going to build up all the files manually. 
 
 To start, let's make a directory for our game. Inside that directory, we're going to make a number of files. 
 
@@ -73,8 +73,6 @@ In this file, we:
 Finally, we need a Rake file. This is the file we'll use to actually load our `cards.rb` file. Create a file called `Rakefile` and paste the following into it:
 
 {{< highlight ruby "linenos=inline" >}}
-require 'squib'
-
 task default: [:cards]
 
 task :cards do
