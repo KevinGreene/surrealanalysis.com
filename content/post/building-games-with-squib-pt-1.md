@@ -7,6 +7,8 @@ title = "Building Games with Squib"
 
 As board games rise in popularity, many new groups focused on creating board games are popping up. Luckily, instead of expensive tools like InDesign, or Windows-centric tools like nanDeck, there are a number of alternatives. One actively developed alternative is [Squib](http://squib.rocks), a Ruby DSL, and we're going to be building a game with that.
 
+<!--more-->
+
 To start, you need to have Ruby and Bundler installed. If you don't have either installed, you can install Ruby by following the directions on the [website](https://www.ruby-lang.org/en/downloads/). After Ruby is installed, run `gem install bundler` from the command line, and we're good to go! 
 
 Now that we have the prerequisites installed, we need a game to build. We're going to start simple by building a custom themed triange deck, sometimes known as a [Pairs](http://cheapass.com/node/142) deck based on the game by James Ernest and Paul Peterson. To understand what types of games work well with this deck, I'd recommend reading [The Pairs Companion PDF](http://cheapass.com/sites/default/files/PairsCompanionBook.Scaffolding)
