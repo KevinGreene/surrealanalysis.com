@@ -2,7 +2,7 @@ baseurl = "http://www.surrealanalysis.com/"
 languageCode = "en-us"
 title = "Surreal Analysis"
 PygmentsCodeFences= true
-pygmentsstyle = "friendly"
+pygmentsuseclasses = true
 googleAnalytics = "UA-50379802-1"
 
 [Params]
