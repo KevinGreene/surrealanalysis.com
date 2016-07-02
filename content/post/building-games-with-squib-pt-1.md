@@ -1,7 +1,7 @@
 +++
 date = "2016-06-30T01:14:12-04:00"
 draft = false
-title = "Building Games with Squib"
+title = "Building Games with Squib: Part 1, Setup"
 
 +++
 
@@ -80,8 +80,8 @@ task :cards do
 end
 {{< /highlight >}}
 
-We're ready to make a deck! Run `bundler exec rake`, and the folder `_output` should now exist. In it, we have all 55 of our cards in a PDF titled `output.pdf`!
+We're ready to make a deck! Run `bundler exec rake`, and the folder `_output` should now exist. In it, we have all 45 of our cards in a PDF titled `output.pdf`!
 
 We have a very basic deck, but it's very boring. Now it's time to add some visuals.
 
-Part 2 coming soon
+For that, head to [Part 2](/post/building-games-with-squib-pt-2)
