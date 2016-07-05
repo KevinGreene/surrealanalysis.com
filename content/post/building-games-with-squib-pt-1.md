@@ -11,7 +11,7 @@ As board games rise in popularity, many new groups focused on creating board gam
 
 To start, we need to have Ruby and Bundler installed. If you don't have either installed, you can install Ruby by following the directions on the [website](https://www.ruby-lang.org/en/downloads/). After Ruby is installed, run `gem install bundler` from the command line, and we're good to go! 
 
-Now that we have the prerequisites installed, we need a game to build. We're going to start simple by building a custom themed triange deck, sometimes known as a [Pairs](http://cheapass.com/node/142) deck based on the game by James Ernest and Paul Peterson. To understand what types of games work well with this deck, I'd recommend reading [The Pairs Companion PDF](http://cheapass.com/sites/default/files/PairsCompanionBook.Scaffolding)
+Now that we have the prerequisites installed, we need a game to build. We're going to start simple by building a custom themed triangle deck, sometimes known as a [Pairs](http://cheapass.com/node/142) deck based on the game by James Ernest and Paul Peterson. To understand what types of games work well with this deck, I'd recommend reading [The Pairs Companion PDF](http://cheapass.com/sites/default/files/PairsCompanionBook.Scaffolding)
 
 ## Scaffolding
 
@@ -57,7 +57,7 @@ cards = Squib.csv file: 'cards.csv'
 
 Squib::Deck.new(cards: cards['number'].size) do
   text str: cards['number'] 
-  save format: :png
+  save format: :pdf
 end
 {{< /highlight >}}
 
@@ -73,7 +73,7 @@ It's worth noting that the `csv` function is what interprets the `Qty` attribute
 
 ``` ruby
 {
-  numbers => ["1", "2", "2", "3", "3", "3", ...]
+  number => ["1", "2", "2", "3", "3", "3", ...]
 }
 ```
 
