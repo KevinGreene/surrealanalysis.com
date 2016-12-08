@@ -101,7 +101,7 @@ At this point, we should start modifying our app to read from Consul. Anytime we
   :start (envoy/consul->map (env :consul-url)))
 ```
 
-Running `mount/start`, we see that the program behaves exactly the same. We can update the values in Consul, and refresh them in our app using `mount/stop` followed by `mount/start`.
+If you already had a REPL running, you will need to restart it to properly pull the changes you made to `profiles.clj`. Running `mount/start`, we see that the program behaves exactly the same as before. We can update the values in Consul, and refresh them in our app using `mount/stop` followed by `mount/start`.
 
 We'd like it if updating Consul automatically restarted our Mount components, though.
 
