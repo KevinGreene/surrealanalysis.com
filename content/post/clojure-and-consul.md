@@ -37,7 +37,7 @@ Our main file, like many `mount` based applications, will just contain reference
   (mount/start)
 ```
 
-Our printer namespace will have one state, `timer`. This `timer` should periodically print a phrase when started, and cancel itself when stopped.
+Our printer namespace will initially have only one state, `timer`. This `timer` should periodically print a phrase when started, and cancel itself when stopped.
 
 ``` clojure
 (ns consul-printer.printer
