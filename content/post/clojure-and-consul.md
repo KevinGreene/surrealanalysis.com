@@ -119,6 +119,12 @@ We'd like it if updating Consul automatically restarted our Mount components, th
   :stop (envoy/stop consul-watcher))
 ```
 
-Here we're using a few important functions: `mount/on-change`, `mount/restart-listener`, and `envoy/watch-path`. `mount/restart-listener` takes a map, and returns a listener. We use that listener with the function `mount/on-change`. `mount/on-change` takes a listener and a collection of keys, and if any of the keys in that list match the keys in the listener's config, restarts the appropriate vector of states. `envoy/watch-path` takes a path, in this case something like `http://localhost:8500/v1/kv/printer`, and every time that path changes, it calls the given function.
+Here we're using a few important functions: `mount/on-change`, `mount/restart-listener`, and `envoy/watch-path`. 
+
+`mount/restart-listener` takes a map, and returns a listener that implements `mount`'s `ChangeListener` protocol.
+
+We use that listener with the function `mount/on-change`. `mount/on-change` takes a listener and a collection of keys, and if any of the keys in that list match the keys in the listener's config, restarts the appropriate vector of states. 
+
+`envoy/watch-path` takes a path, in this case something like `http://localhost:8500/v1/kv/printer`, and every time that path changes it calls the given function. In this case, that function is `mount/on-change`.
 
 Surprisingly, that's it. An entire working example of Clojure and Consul, all in a file less than 40 lines long. Many thanks to Anatoly's presentation at SoftwareGR that demonstrated these concepts, as well as his example project [Hubble](https://github.com/tolitius/stater/tree/master/hubble/) which demonstrates the same concepts in a larger application.
