@@ -10,7 +10,7 @@ title = "Consul & Clojure"
 
 One of the frustrations of testing out infrastructure tools is that they need an application to demonstrate their concepts. In this example, we'll be using a dummy application called `consul-printer`, which won't do anything except print messages based on Consul.
 
-To start, we'll run `lein new app consul-printer`, and end up with the basic scaffolding. In `project.clj`, we'll add a few dependencies and plugins.
+To start, we'll run `lein new app consul-printer` and end up with some basic scaffolding. In `project.clj`, we'll add a few dependencies and plugins.
 
 ``` clojure
 :dependencies [[org.clojure/clojure "1.8.0"]
@@ -24,7 +24,7 @@ To start, we'll run `lein new app consul-printer`, and end up with the basic sca
 
 We'll be using `mount` for mounting components, `envoy` for interacting with Consul, `clj-time` and `chime` for periodically printing messages, and `environ` for pulling environment variables.
 
-To start, we'll get the basic functionality of the application up. Our main file, like main `mount` based applications, will just contain references to our components and a call to `mount/start`.
+Our main file, like many `mount` based applications, will just contain references to our components and a call to `mount/start`.
 
 ``` clojure
 (ns consul-printer.core
