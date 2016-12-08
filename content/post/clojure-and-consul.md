@@ -8,7 +8,7 @@ title = "Consul & Clojure"
 
 <!--more-->
 
-One of the frustrations of testing out infrastructure tools is that they necessarily need an application to interact with. In this example, we'll be using a dummy application called `consul-printer`, which won't do anything except print messages based on Consul.
+One of the frustrations of testing out infrastructure tools is that they need an application to demonstrate their concepts. In this example, we'll be using a dummy application called `consul-printer`, which won't do anything except print messages based on Consul.
 
 To start, we'll run `lein new app consul-printer`, and end up with the basic scaffolding. In `project.clj`, we'll add a few dependencies and plugins.
 
