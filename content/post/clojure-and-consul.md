@@ -29,7 +29,7 @@ Our main file, like many `mount` based applications, will just contain reference
 ``` clojure
 (ns consul-printer.core
   (:require [mount.core :as mount]
-            [consul-printer.printer :refer [timer]]
+            [consul-printer.printer :refer [timer]])
   (:gen-class))
 
 (defn -main
@@ -46,7 +46,7 @@ Our printer namespace will initially have only one state, `timer`. This `timer` 
             [clj-time.core :as t]
             [chime :refer [chime-at]]
             [clj-time.periodic :refer [periodic-seq]]
-            [environ.core :refer [env]])
+            [environ.core :refer [env]]))
 
 (def config
   {:printer {:interval 1000
@@ -94,7 +94,7 @@ Now, to point our Clojure app to Consul, we add a `profiles.clj` file containing
  :test {:env {:consul-url "http://localhost:8500/v1/kv"}}}
 ```
 
-At this point, we should start modifying our app to read from Consul. Anytime we introduce dependencies on outside databases in Clojure, we want to wrap that interaction in a state. Furthermore, instead of a hardcoded Clojure map, we'd like to read from Consul and make a map from that. To do that, we'll be using `envoy/consul->map`, which takes a Consul URL and returns a nested Clojure map of the values.
+At this point, we should start modifying our app to read from Consul. Anytime we introduce dependencies on outside databases in Clojure, we want to wrap that interaction in a state. Furthermore, instead of a hardcoded Clojure map, we'd like to read from Consul and make a map from that. To do that, we'll be using `envoy/consul->map`, which takes a Consul URL and returns a nested Clojure map of the values, and replacing the previously defined `config`.
 
 ``` clojure
 (defstate config
