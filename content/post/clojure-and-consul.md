@@ -119,7 +119,7 @@ We'd like it if updating Consul automatically restarted our Mount components, th
   :stop (envoy/stop consul-watcher))
 ```
 
-Here we're using a few important functions: `mount/restart-listener`, `mount/on-change`, , and `envoy/watch-path`. To better understand what's happening, let's work from the inside out.
+Here we're using a few important functions: `mount/restart-listener`, `mount/on-change`, and `envoy/watch-path`. To better understand what's happening, let's work from the inside out.
 
 `mount/restart-listener` takes a map, and returns a listener that implements `mount`'s `ChangeListener` protocol. Each map entry has a keyword that represents the message being passed to your application to trigger a restart, and a vector of the components to restart.
 
