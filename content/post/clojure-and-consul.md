@@ -8,7 +8,7 @@ title = "Consul & Clojure"
 
 <!--more-->
 
-While Consul has many usages, we're going to be using Consul's ability to serve as a distributed key-value store to share state or update configuration between distributed instances of the same application. One of the frustrations of testing out infrastructure tools is that they need an application to demonstrate their concepts. In this example, we'll be using a dummy application called `consul-printer`, which won't do anything except print messages based on Consul.
+While Consul has many usages, we're going to be using Consul's ability to serve as a distributed key-value store to share state or update configuration between distributed instances of the same application. One of the frustrations of testing out infrastructure tools is that they need an application to demonstrate their concepts. In this example, we'll be using a dummy application called `consul-printer`, which won't do anything except print messages based on Consul. You can find the finished source for the application, including Consul integration, [here.](https://github.com/KevinGreene/consul-printer)
 
 To start, we'll run `lein new app consul-printer` and end up with some basic scaffolding. In `project.clj`, we'll add a few dependencies and plugins.
 
