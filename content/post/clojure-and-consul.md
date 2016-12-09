@@ -8,7 +8,7 @@ title = "Consul & Clojure"
 
 <!--more-->
 
-One of the frustrations of testing out infrastructure tools is that they need an application to demonstrate their concepts. In this example, we'll be using a dummy application called `consul-printer`, which won't do anything except print messages based on Consul.
+While Consul has many usages, we're going to be using Consul's ability to serve as a distributed key-value store to share state or update configuration between distributed instances of the same application. One of the frustrations of testing out infrastructure tools is that they need an application to demonstrate their concepts. In this example, we'll be using a dummy application called `consul-printer`, which won't do anything except print messages based on Consul.
 
 To start, we'll run `lein new app consul-printer` and end up with some basic scaffolding. In `project.clj`, we'll add a few dependencies and plugins.
 
@@ -22,7 +22,7 @@ To start, we'll run `lein new app consul-printer` and end up with some basic sca
 :plugins [[lein-environ "1.1.0"]]
 ```
 
-We'll be using `mount` for mounting components, `envoy` for interacting with Consul, `clj-time` and `chime` for periodically printing messages, and `environ` for pulling environment variables.
+We'll be using `mount` for mounting components and managing the internal state of the Clojure application, `envoy` for interacting with Consul, `clj-time` and `chime` for periodically printing messages, and `environ` for pulling environment variables.
 
 Our main file, like many `mount` based applications, will just contain references to our components and a call to `mount/start`.
 
@@ -119,12 +119,12 @@ We'd like it if updating Consul automatically restarted our Mount components, th
   :stop (envoy/stop consul-watcher))
 ```
 
-Here we're using a few important functions: `mount/on-change`, `mount/restart-listener`, and `envoy/watch-path`. 
+Here we're using a few important functions: `mount/restart-listener`, `mount/on-change`, , and `envoy/watch-path`. To better understand what's happening, let's work from the inside out.
 
-`mount/restart-listener` takes a map, and returns a listener that implements `mount`'s `ChangeListener` protocol.
+`mount/restart-listener` takes a map, and returns a listener that implements `mount`'s `ChangeListener` protocol. Each map entry has a keyword that represents the message being passed to your application to trigger a restart, and a vector of the components to restart.
 
-We use that listener with the function `mount/on-change`. `mount/on-change` takes a listener and a collection of keys, and if any of the keys in that list match the keys in the listener's config, restarts the appropriate vector of states. 
+We use that listener with the function `mount/on-change`. `mount/on-change` takes a listener and a collection of keywords, and if the collection of keywords matches any in the listener, actually triggers a restart of the corresponding components. 
 
-`envoy/watch-path` takes a path, in this case something like `http://localhost:8500/v1/kv/printer`, and every time that path changes it calls the given function. In this case, that function is `mount/on-change`.
+Finally, `envoy/watch-path` takes a path, in this case something like `http://localhost:8500/v1/kv/printer`. Everytime a key on that path is added or changed, or the value of that key is updated, it calls the corresponding function with the relevant changes. In this case we're calling `on-change`, looking only at keys of the map that was passed, to see if we should trigger a config refresh.
 
 Surprisingly, that's it. An entire working example of Clojure and Consul, all in a file less than 40 lines long. Many thanks to Anatoly's presentation at SoftwareGR that demonstrated these concepts, as well as his example project [Hubble](https://github.com/tolitius/stater/tree/master/hubble/) which demonstrates the same concepts in a larger application.
